@@ -32,5 +32,7 @@ Plot2.dat<-Plot2.dat %>%
 ```
 
 
-
+```{r}
+ggplot(Plot2.dat, aes(x, freq)) + geom_line() +geom_smooth()
+```
 

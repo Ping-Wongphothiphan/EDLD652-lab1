@@ -39,3 +39,8 @@ ggplot(Plot2.dat, aes(x, freq)) + geom_line() +geom_smooth()
 ```{r}
 ggplot(Plot2.dat, aes(x, freq)) +geom_line(color="#757575", size = 1)+geom_area(fill = "#6e91f2", alpha = .3)  +geom_smooth(color = "#f500e4", se = F)
 ```
+
+```{r}
+ggplot(Plot2.dat, aes(x, freq)) +geom_line(color="#757575", size = 1)+geom_area(fill = "#6e91f2", alpha = .3)  +geom_smooth(color = "#f500e4", se = F) + labs(x = "Year (data summarized by month)", y = "Number of #stats tweets", title = "Growth of the #rstats hashtag on twitter over time", caption = "Data from Mike Kearny, distributed via #tidytuesday")
+```
+

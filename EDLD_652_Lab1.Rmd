@@ -5,6 +5,11 @@ date: "1/13/2021"
 output: html_document
 ---
 
+Plot 1 is here
+
+
+Plot 2 is here
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -16,8 +21,14 @@ rstats_tweets <- readRDS(here("rstats_tweets.rds"))
 rstats.with.month<-rstats_tweets %>% 
   mutate(month = lubridate::round_date(rstats_tweets$created_at, unit="month"))
 ```
+
 ```{r}
-plot2.dat <- count(rstats.with.month$month)
+Plot2.dat<-count(rstats.with.month$month)
+```
+
+```{r}
+Plot2.dat<-Plot2.dat %>% 
+  filter(x < lubridate::as_date("2019-01-01"))
 ```
 
 

@@ -5,6 +5,13 @@ date: "1/13/2021"
 output: html_document
 ---
 
+```{r}
+library(tidyverse)
+library(here)
+rstats_tweets <- readRDS(here("rstats_tweets.rds"))
+```
+
+
 ``````{r}
 rstats.with.month<-rstats_tweets %>% 
   mutate(month = lubridate::round_date(rstats_tweets$created_at, unit="month"))
@@ -12,14 +19,7 @@ rstats.with.month<-rstats_tweets %>%
 ```{r}
 plot2.dat <- count(rstats.with.month$month)
 ```
-<<<<<<< Updated upstream
 
 
-```
 
-```{r}
-ggplot(mpg) + geom_point(aes(cty, hwy))
-```
 
-=======
->>>>>>> Stashed changes

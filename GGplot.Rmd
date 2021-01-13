@@ -1,0 +1,20 @@
+---
+title: "GGplotTest"
+author: "Ping"
+date: "1/12/2021"
+output: html_document
+---
+
+create scatter plot from mpg data 
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+View(mpg)
+```
+
+
+```{r}
+ggplot(mpg, aes(cty, hwy)) + geom_point(size = 4) + geom_smooth() + labs(title = "ping's graph", subtitle = "ping's first ggplot", caption = "1/12/2021")
+```
+

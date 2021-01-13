@@ -5,17 +5,24 @@ date: "1/13/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse)
+library(here)
+rstats_tweets <- readRDS(here("rstats_tweets.rds"))
 ```
 
 ```{r}
 library(ggplot2)
 library(tidyverse)
 
+``````{r}
+rstats.with.month<-rstats_tweets %>% 
+  mutate(month = lubridate::round_date(rstats_tweets$created_at, unit="month"))
+```
+```{r}
+plot2.dat <- count(rstats.with.month$month)
 ```
 
-```{r}
-ggplot(mpg) + geom_point(aes(cty, hwy))
-```
+
+
 

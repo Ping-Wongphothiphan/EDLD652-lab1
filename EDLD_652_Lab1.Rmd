@@ -30,7 +30,13 @@ Factor screen_name, create plot, coordflip.
 
 ```{r}
 library(ggplot2)
-ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
+s = ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
+```
+
+Change the axis labels, title, subtitle
+
+```{r}
+s + labs(x = "Twitter Screen Name", y  = "count", title = "Most prolific #rstats tweeters", subtitle = "Top 25 screen names displayed", caption = "Data from Mike Kearny, distributed via #tidutuesday")
 ```
 
 

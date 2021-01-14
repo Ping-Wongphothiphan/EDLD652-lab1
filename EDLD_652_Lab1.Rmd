@@ -26,6 +26,13 @@ data = rstats_tweets %>%
    slice(seq_len(25))
 ```
 
+Factor screen_name, create plot, coordflip.
+
+```{r}
+library(ggplot2)
+ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
+```
+
 
 
 Plot 2 is here

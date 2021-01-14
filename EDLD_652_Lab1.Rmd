@@ -7,6 +7,26 @@ output: html_document
 
 Plot 1 is here
 
+Label the dataset (already readRDS) under the name 'data.' Library(tidyverse) was already run, using the code chunck from plot2. 
+
+
+
+```{r}
+data <- rstats_tweets
+
+```
+
+Count the number of times a screen name appears and select only the top 25.
+
+```{r}
+data %>% 
+   count(screen_name) %>%
+   arrange(desc(n)) %>% 
+   slice(seq_len(25))
+```
+
+
+    Consider arranging in descending order, then using dplyr::slice
 
 Plot 2 is here
 

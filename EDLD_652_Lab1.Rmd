@@ -5,17 +5,24 @@ date: "1/13/2021"
 output: html_document
 ---
 
-Plot 1 is here
+# Plot 1
 
-Insrert data
+Insert data
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, 
+                      include = T, 
+                      warnings = F, 
+                      messages = F
+                      )
 
-
-```{r}
 library(here)
-rstats_tweets <- readRDS(here("rstats_tweets.rds"))
-
+library(tidyverse)
+library(lubridate)
 ```
 
+```{r load_data}
+rstats_tweets <- readRDS(here("rstats_tweets.rds"))
+```
 
 Count screen_name and select the top 25. Arrange in descending order. Create a new data frame.
 
@@ -26,88 +33,91 @@ data = rstats_tweets %>%
    slice(seq_len(25))
 ```
 
+## Plot 1 Rough Draft
+
 Factor screen_name, create plot, coordflip.
 
 ```{r}
-library(ggplot2)
-plot = ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
-plot
+plot1_rough = 
+  ggplot(data, aes(y = fct_reorder(screen_name,n),x = n)) + 
+  geom_col() + 
+  labs(y = 'screen_name') 
 ```
 
-Change the axis labels, title, subtitle
-
-```{r}
-plotwithlabs = plot + labs(x = "Twitter Screen Name", y  = "count", title = "Most prolific #rstats tweeters", subtitle = "Top 25 screen names displayed", caption = "Data from Mike Kearny, distributed via #tidutuesday")
-plotwithlabs
-```
-
-Removed grid and background color
-```{r}
-
-removegrid = plotwithlabs + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank())
-removegrid
-
+```{r echo=FALSE}
+plot1_rough
 ```
 
 
+## Plot1 Finalized
 
-Plot 2 is here
+Change the axis labels, title, subtitle. Also, change fill and change background
 
 ```{r}
-library(tidyverse)
-library(here)
-rstats_tweets <- readRDS(here("rstats_tweets.rds"))
+plot1_final = plot1_rough + 
+  geom_col(fill = 'cornflowerblue') +
+  labs(x  = "Count", 
+       y = "Twitter Screen Name", 
+       title = "Most prolific #rstats tweeters", 
+       subtitle = "Top 25 screen names displayed", 
+       caption = "Data from Mike Kearny, distributed via #tidutuesday") +
+  theme(panel.grid.major.x = element_line(color = 'gray70'),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = 'white'),
+        plot.caption = element_text(hjust = 0.65),
+        axis.line.y = NULL)
+```
+
+```{r echo=FALSE}
+plot1_final
+```
+
+# Plot 2 
+
+```{r}
+rstats_tweets_2019 <-rstats_tweets %>% 
+  mutate(month = round_date(rstats_tweets$created_at, unit = 'month'),
+         year = year(rstats_tweets$created_at)) %>% 
+  filter(created_at < as_date("2019-01-01"))
+
+Plotdat.2 <- 
+  rstats_tweets_2019 %>% 
+  count(month)
 ```
 
 ```{r}
-library(ggplot2)
-library(tidyverse)
-
-``````{r}
-rstats.with.month<-rstats_tweets %>% 
-  mutate(month = lubridate::round_date(rstats_tweets$created_at, unit="month"))
+Plot2_rough_draft <- 
+  Plotdat.2 %>% 
+  ggplot(aes(x = month, y = n)) + 
+  geom_line() + 
+  geom_smooth() + 
+  scale_y_continuous(breaks = c(0, 4000, 8000, 12000)) + 
+  xlim(as_datetime('2009-01-01'),as_datetime('2018-12-31')) 
+```
+```{r echo=FALSE}
+suppressWarnings(print(Plot2_rough_draft))
 ```
 
 ```{r}
-Plot2.dat<-count(rstats.with.month$month)
-```
-
-```{r}
-Plot2.dat<-Plot2.dat %>% 
-  filter(x < lubridate::as_date("2019-01-01"))
-```
-
-
-```{r}
-ggplot(Plot2.dat, aes(x, freq))+ 
-  geom_line() +geom_smooth()
-```
-
-```{r}
-ggplot(Plot2.dat, aes(x, freq)) + 
+Plot2_final <- 
+  Plotdat.2 %>% 
+  ggplot(aes(x = month, y = n)) + 
   geom_line(color="#757575", size = 1) + 
-  geom_area(fill = "#6e91f2", alpha = .3)+ 
-  geom_smooth(color = "#f500e4", se = F)
-```
-
-```{r}
-ggplot(Plot2.dat, aes(x, freq)) +geom_line(color="#757575", size = 1)+
-  geom_area(fill = "#6e91f2", alpha = .3)+
   geom_smooth(color = "#f500e4", se = F) + 
-  labs(x = "Year (data summarized by month)", y = "Number of #stats tweets", title = "Growth of the #rstats hashtag on twitter over time", caption = "Data from Mike Kearny, distributed via #tidytuesday")
-```
-
-```{r}
-ggplot(Plot2.dat, aes(x, freq)) +
-  geom_line(color="#757575", size = 1)+
+  scale_y_continuous(breaks = c(0, 4000, 8000, 12000)) + 
+  xlim(as_datetime('2009-01-01'), as_datetime('2018-12-31')) +
   geom_area(fill = "#6e91f2", alpha = .3) + 
-  geom_smooth(color = "#f500e4", se = F) + 
-  labs(x = "Year (data summarized by month)", 
-       y = "Number of #stats tweets", 
+  labs(x = "Year (data summarized by month)", y = "Number of #rstats tweets", 
        title = "Growth of the #rstats hashtag on twitter over time", 
        caption = "Data from Mike Kearny, distributed via #tidytuesday") + 
   theme_minimal()
 ```
+
+```{r echo=FALSE}
+suppressWarnings(print(Plot2_final))
+```
+
 
 
 

@@ -30,13 +30,23 @@ Factor screen_name, create plot, coordflip.
 
 ```{r}
 library(ggplot2)
-s = ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
+plot = ggplot(data, aes(fct_reorder(screen_name,n),n)) + geom_col() + geom_col(fill="cornflowerblue") +coord_flip()
+plot
 ```
 
 Change the axis labels, title, subtitle
 
 ```{r}
-s + labs(x = "Twitter Screen Name", y  = "count", title = "Most prolific #rstats tweeters", subtitle = "Top 25 screen names displayed", caption = "Data from Mike Kearny, distributed via #tidutuesday")
+plotwithlabs = plot + labs(x = "Twitter Screen Name", y  = "count", title = "Most prolific #rstats tweeters", subtitle = "Top 25 screen names displayed", caption = "Data from Mike Kearny, distributed via #tidutuesday")
+plotwithlabs
+```
+
+Removed grid and background color
+```{r}
+
+removegrid = plotwithlabs + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank())
+removegrid
+
 ```
 
 

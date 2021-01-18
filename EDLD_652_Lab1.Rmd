@@ -35,6 +35,12 @@ data = rstats_tweets %>%
 
 ## Plot 1 Rough Draft
 
+```{r}
+ggplot(data,aes(screen_name, n))+
+  geom_col()
+```
+
+
 Factor screen_name, create plot, coordflip.
 
 ```{r}

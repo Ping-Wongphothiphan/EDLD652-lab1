@@ -35,13 +35,19 @@ data = rstats_tweets %>%
 
 ## Plot 1 Rough Draft
 
+```{r}
+ggplot(data,aes(screen_name, n))+
+  geom_col()
+```
+
+
 Factor screen_name, create plot, coordflip.
 
 ```{r}
 plot1_rough = 
-  ggplot(data, aes(y = fct_reorder(screen_name,n),x = n)) + 
+  ggplot(data, aes(fct_reorder(screen_name,n), n)) + 
   geom_col() + 
-  labs(y = 'screen_name') 
+  coord_flip() 
 ```
 
 ```{r echo=FALSE}

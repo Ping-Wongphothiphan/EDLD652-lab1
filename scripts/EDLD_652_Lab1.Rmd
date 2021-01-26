@@ -1,0 +1,163 @@
+---
+title: "EDLD 652 Lab 1"
+author: 
+  - "Kay Chansiri"
+  - "Ping Wongphothipahan"
+  - "Chris Loan"
+date: "1/13/2021"
+output: html_document
+---
+
+# Plot 1
+
+Insert data
+```{r setup, include=FALSE}
+# I recommend using TRUE instead of T and FALSE instead of F because
+# T and F can be reassigned, but TRUE and FALSE are protected variables that
+# cannot be changed to be anything else. In other words, the below code would
+# break the code you had
+#
+# T <- rnorm(100)
+# 
+# where as the below is invalid R code and won't run
+#
+# TRUE <- rnorm(100)
+# 
+# Error in TRUE <- rnorm(100) : 
+#   invalid (do_set) left-hand side to assignment
+#
+knitr::opts_chunk$set(echo = TRUE, 
+                      include = TRUE, 
+                      warnings = FALSE, 
+                      messages = FALSE)
+
+library(here)
+library(tidyverse)
+library(lubridate)
+```
+
+```{r load_data}
+# I rearranged your folder structure a bit so that means the below code
+# has to change a bit too
+rstats_tweets <- readRDS(here("data", "rstats_tweets.rds"))
+```
+
+Count screen_name and select the top 25. Arrange in descending order. Create a new data frame.
+
+```{r}
+data <- rstats_tweets %>% 
+   count(screen_name) %>%
+   arrange(desc(n)) %>% 
+   slice(seq_len(25))
+```
+
+## Plot 1 Rough Draft
+
+```{r}
+ggplot(data, aes(screen_name, n))+
+  geom_col()
+```
+
+
+Factor screen_name, create plot, coordflip.
+
+```{r}
+# I also recommend using the arrow instead of equals sign for object assignment
+# to distinguish between assignment and function arguments
+plot1_rough <- 
+  ggplot(data, aes(fct_reorder(screen_name,n), n)) + 
+  geom_col() + 
+  coord_flip() 
+```
+
+```{r echo=FALSE}
+plot1_rough
+```
+
+
+## Plot1 Finalized
+
+Change the axis labels, title, subtitle. Also, change fill and change background
+
+```{r}
+plot1_final <- plot1_rough + 
+  geom_col(fill = 'cornflowerblue') +
+  labs(x  = "Count", 
+       y = "Twitter Screen Name", 
+       title = "Most prolific #rstats tweeters", 
+       subtitle = "Top 25 screen names displayed", 
+       caption = "Data from Mike Kearny, distributed via #tidutuesday") +
+  theme(panel.grid.major.x = element_line(color = 'gray70'),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = 'white'),
+        plot.caption = element_text(hjust = 0.65),
+        axis.line.y = NULL)
+```
+
+```{r echo=FALSE}
+plot1_final
+```
+
+# Plot 2 
+
+```{r}
+# You don't need to refer to the dataset using `$` for any of the tidyverse
+# functions because they all use non-standard evaluation. So the dataset is
+# essentially just passed through.
+rstats_tweets_2019 <- rstats_tweets %>% 
+  mutate(month = round_date(created_at, unit = 'month'),
+         year = year(created_at)) %>% 
+  filter(created_at < as_date("2019-01-01"))
+
+# This is super minor but I would recommend not including periods in object
+# names because in R that's how you declare methods for S3 objects. That's how,
+# for example, the behavior of `print()` changes based on the object you pass
+# it
+Plotdat_2 <- 
+  rstats_tweets_2019 %>% 
+  count(month)
+```
+
+```{r}
+Plot2_rough_draft <- 
+  Plotdat_2 %>% 
+  ggplot(aes(x = month, y = n)) + 
+  geom_line() + 
+  geom_smooth() + 
+  scale_y_continuous(breaks = c(0, 4000, 8000, 12000)) + 
+  xlim(as_datetime('2009-01-01'),as_datetime('2018-12-31')) 
+```
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+# rather than using suppressWarnings, just pass the chunk option `warning = FALSE`
+# In this case, however, you need to suppress both a warning and  a message 
+Plot2_rough_draft
+```
+
+```{r}
+Plot2_final <- 
+  Plotdat_2 %>% 
+  ggplot(aes(x = month, y = n)) + 
+  geom_area(fill = "#6e91f2", alpha = .3) + 
+  geom_line(color = "#757575", size = 1) + 
+  geom_smooth(color = "#f500e4", se = FALSE) + 
+  scale_y_continuous(breaks = c(0, 4000, 8000, 12000)) + 
+  xlim(as_datetime('2009-01-01'), as_datetime('2018-12-31')) +
+  labs(x = "Year (data summarized by month)", y = "Number of #rstats tweets", 
+       title = "Growth of the #rstats hashtag on twitter over time", 
+       caption = "Data from Mike Kearny, distributed via #tidytuesday") + 
+  theme_minimal()
+
+# Notice I flipped the order of the layers so the line is on top of the area.
+# However, you actually could just pass a color argument, in addition to the
+# fill argument, to geom_area.
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+Plot2_final
+```
+
+
+
+
+
